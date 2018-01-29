@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- * Abstract NameResolver Implementation with advanced features.
+ * gRPC NameResolver Implementation with advanced features.
  *
  * <p>Difference to DnsNameResolver, the implementation can handle multiple addresses in one line like:
  *
@@ -33,9 +33,9 @@ import static com.google.common.base.Preconditions.checkState;
  *
  * <p>grpc://grpc.dreamfly.io:2379
  */
-public class AbstractAdvancedNameResolver extends NameResolver {
+public class GrpcAdvancedNameResolver extends NameResolver {
 
-    private static Logger logger = LoggerFactory.getLogger(AbstractAdvancedNameResolver.class);
+    private static Logger logger = LoggerFactory.getLogger(GrpcAdvancedNameResolver.class);
 
     private final String scheme;
     private final String authority;
@@ -62,7 +62,7 @@ public class AbstractAdvancedNameResolver extends NameResolver {
 
         @Override
         public void run() {
-            synchronized (AbstractAdvancedNameResolver.this) {
+            synchronized (GrpcAdvancedNameResolver.this) {
                 if (!shutdown) {
                     executor.execute(resolutionRunnable);
                 }
@@ -70,10 +70,10 @@ public class AbstractAdvancedNameResolver extends NameResolver {
         }
     };
 
-    public AbstractAdvancedNameResolver(String scheme,
-                                        String addresses,
-                                        SharedResourceHolder.Resource<ScheduledExecutorService> timerServiceResource,
-                                        SharedResourceHolder.Resource<ExecutorService> executorResource) {
+    public GrpcAdvancedNameResolver(String scheme,
+                                    String addresses,
+                                    SharedResourceHolder.Resource<ScheduledExecutorService> timerServiceResource,
+                                    SharedResourceHolder.Resource<ExecutorService> executorResource) {
         checkArgument(!Strings.isNullOrEmpty(scheme), "scheme should not be null or empty");
         checkArgument(!Strings.isNullOrEmpty(addresses), "addresses should not be null or empty");
         checkNotNull(timerServiceResource, "timerServiceResource should not be null");
@@ -153,7 +153,7 @@ public class AbstractAdvancedNameResolver extends NameResolver {
         @Override
         public void run() {
             Listener savedListener;
-            synchronized (AbstractAdvancedNameResolver.this) {
+            synchronized (GrpcAdvancedNameResolver.this) {
                 // If this task is started by refresh(), there might already be a scheduled task.
                 if (resolutionTask != null) {
                     resolutionTask.cancel(false);
@@ -171,7 +171,7 @@ public class AbstractAdvancedNameResolver extends NameResolver {
                 try {
                     ipPortPairList = GrpcAddressParser.parse(addresses, 2379);
                 } catch (UnknownHostException e) {
-                    synchronized (AbstractAdvancedNameResolver.this) {
+                    synchronized (GrpcAdvancedNameResolver.this) {
                         if (shutdown) {
                             return;
                         }
@@ -193,7 +193,7 @@ public class AbstractAdvancedNameResolver extends NameResolver {
 
                 savedListener.onAddresses(servers, Attributes.EMPTY);
             } finally {
-                synchronized (AbstractAdvancedNameResolver.this) {
+                synchronized (GrpcAdvancedNameResolver.this) {
                     resolving = false;
                 }
             }
