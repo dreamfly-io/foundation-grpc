@@ -1,0 +1,24 @@
+syntax = "proto3";
+package testresource;
+
+option java_multiple_files = true;
+option java_package = "io.dreamfly.grpc.test";
+option java_outer_classname = "MockServiceProto";
+
+// A controllable service which is used by the client to customize the server side behavior.
+service ControllableService {
+  // do execution
+  rpc execute(ControllableRequest) returns (ControllableResponse) {}
+}
+
+message ControllableRequest {
+  // request id
+  int64 requestId = 1;
+  int32 expectedLatency = 2;
+}
+
+message ControllableResponse {
+  // request id
+  int64 requestId = 1;
+}
+

@@ -40,6 +40,7 @@ public class GrpcAdvancedNameResolver extends NameResolver {
     private final String scheme;
     private final String authority;
     private final String addresses;
+    private final int defaultPort;
 
     private final SharedResourceHolder.Resource<ScheduledExecutorService> timerServiceResource;
     private final SharedResourceHolder.Resource<ExecutorService> executorResource;
@@ -72,15 +73,18 @@ public class GrpcAdvancedNameResolver extends NameResolver {
 
     public GrpcAdvancedNameResolver(String scheme,
                                     String addresses,
+                                    int defaultPort,
                                     SharedResourceHolder.Resource<ScheduledExecutorService> timerServiceResource,
                                     SharedResourceHolder.Resource<ExecutorService> executorResource) {
         checkArgument(!Strings.isNullOrEmpty(scheme), "scheme should not be null or empty");
         checkArgument(!Strings.isNullOrEmpty(addresses), "addresses should not be null or empty");
+        checkArgument(defaultPort > 0 && defaultPort < 65536, "invalid port " + defaultPort);
         checkNotNull(timerServiceResource, "timerServiceResource should not be null");
         checkNotNull(executorResource, "executorResource should not be null");
 
         this.scheme = scheme;
         this.addresses = addresses;
+        this.defaultPort = defaultPort;
         this.timerServiceResource = timerServiceResource;
         this.executorResource = executorResource;
 
@@ -169,7 +173,7 @@ public class GrpcAdvancedNameResolver extends NameResolver {
             try {
                 List<GrpcAddressParser.IpPortPair> ipPortPairList;
                 try {
-                    ipPortPairList = GrpcAddressParser.parse(addresses, 2379);
+                    ipPortPairList = GrpcAddressParser.parse(addresses, defaultPort);
                 } catch (UnknownHostException e) {
                     synchronized (GrpcAdvancedNameResolver.this) {
                         if (shutdown) {

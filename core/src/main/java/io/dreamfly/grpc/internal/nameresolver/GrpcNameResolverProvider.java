@@ -89,6 +89,6 @@ public class GrpcNameResolverProvider extends NameResolverProvider {
         checkNotNull(authority, "uri content should not be empty");
 
         logger.info("Grpc NameResolver is activated");
-        return new GrpcAdvancedNameResolver(GRPC_SCHEME, authority, timerServiceResource, executorResource);
+        return new GrpcAdvancedNameResolver(GRPC_SCHEME, authority, 80, timerServiceResource, executorResource);
     }
 }

@@ -9,8 +9,8 @@
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>foundation-grpc-core</artifactId>
-    <name>Core - Foundation gRPC</name>
+    <artifactId>foundation-grpc-test-resource</artifactId>
+    <name>Test Source - Foundation gRPC</name>
 
     <dependencies>
         <!-- gRPC dependencies  -->
@@ -31,11 +31,16 @@
             <artifactId>grpc-stub</artifactId>
         </dependency>
 
+        <!-- we need to use junit5 as compile dependencies -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>foundation-grpc-test-resource</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apiguardian</groupId>
+            <artifactId>apiguardian-api</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
