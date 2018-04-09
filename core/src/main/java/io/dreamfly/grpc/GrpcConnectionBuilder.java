@@ -66,6 +66,7 @@ public class GrpcConnectionBuilder {
         checkState(uri != null, "please set uri before build");
 
         NettyChannelBuilder nettyChannelBuilder = NettyChannelBuilder.forTarget(uri)
+                .keepAliveWithoutCalls(true)
                 // we use SPI to load GrpcNameResolverProvider, so comment this line
                 //.nameResolverFactory(new GrpcNameResolverProvider())
                 .usePlaintext(true);
